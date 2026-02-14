@@ -10,8 +10,14 @@ class CategoryPostController extends Controller
 {
     public function index(Request $request)
     {
-        $categories = Category::with('posts')->get();
-        // $categories = Category::all();
+        // $categories = Category::with('posts')->get();
+        $categories = Category::with([
+            'posts' => function ($query) {
+                $query->with('tags')
+                    ->where('status', 'published')
+                    ->latest();
+            }
+        ])->get();
 
         // dd($categories);
         // return response()->json($categories);
