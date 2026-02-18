@@ -13,14 +13,13 @@ class CategoryPostController extends Controller
         // $categories = Category::with('posts')->get();
         $categories = Category::with([
             'posts' => function ($query) {
-                $query->with('tags')
+                $query->with('tags', 'comments.user')
                     ->where('status', 'published')
                     ->latest();
             }
         ])->get();
 
         // dd($categories);
-        // return response()->json($categories);
         return response()->json([
             'categories' => $categories,
             'message' => 'Fetch all categories successfully',
